@@ -330,6 +330,67 @@
     transition: opacity 0.3s ease; /* 文字の表示を少し滑らかにしたい場合 */
 }
 
+/* スクロール時にフェードイン */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+
+
+.datetime {
+    background: rgba(0, 0, 0, 0.5);  /* 半透明の背景 */
+    border-radius: 15px;
+    padding: 30px;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 2s ease-out;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* アニメーション: フェードイン */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 時刻を表示する部分を特別にスタイリング */
+#datetime {
+    font-size: 30px;
+    letter-spacing: 1.5px;
+    color: #fff;
+    background: linear-gradient(45deg, #ff6f61, #feb47b);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    animation: slideIn 1s ease-in-out;
+}
+
+/* 時刻が表示されるアニメーション */
+@keyframes slideIn {
+    from {
+        transform: translateX(-50%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
     </style>
 
 
@@ -339,7 +400,10 @@
 <body>
 
     <h1>まっしーのサイト</h1>
-    <h2>自己紹介</h2>
+
+    <p>訪問者数: <span id="visitorCount">0</span> 人</p>
+
+<h2>自己紹介</h2>
     
     <img src="mashio's icon.jpg" alt="アイコンだよ" width="150" height="150">
 
@@ -373,6 +437,12 @@
 <!-- ひみつのページへ行くボタン -->
 <button class="secret-button" onclick="showPasswordPopup()">ひみつのページへ</button>
 
+<div class="datetime" id="datetime"></div>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+
+
 <!-- パスワード入力フォームポップアップ -->
 <div id="passwordPopup" class="password-popup">
     <div class="popup-content">
@@ -395,7 +465,7 @@
             <button onclick="closeContactForm()">閉じる</button>
         </div>
 
-
+        
 
 
 <script>
@@ -444,6 +514,44 @@ function checkPasswordForm(event) {
         alert("パスワードが違います！");
     }
 }
+
+// ローカルストレージから訪問者数を取得
+let count = localStorage.getItem("visitorCount");
+
+// 初回アクセスなら 1 にする
+if (count === null) {
+    count = 1;
+} else {
+    count = parseInt(count) + 1;
+}
+
+// ローカルストレージに保存
+localStorage.setItem("visitorCount", count);
+
+// HTML に表示
+document.getElementById("visitorCount").textContent = count;
+
+function updateDateTime() {
+    const datetimeElement = document.getElementById('datetime');
+    const now = new Date();
+    const formattedDate = now.toLocaleString('ja-JP', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false
+    });
+    datetimeElement.textContent = formattedDate;
+}
+
+// 初期表示
+updateDateTime();
+
+// 1秒ごとに更新
+setInterval(updateDateTime, 1000);
+
 
     </script>
 
